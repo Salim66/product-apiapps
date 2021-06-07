@@ -41,13 +41,20 @@ class APIProductController extends Controller
             'price' => 'required',
         ]);
 
+        //upload product
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $unique_image_name = md5(time() . rand()) . '.' . $image->getClientOriginalExtension();
+            $image->move(public_path('uploads/products/'), $unique_image_name);
+        }
+
         $product = Product::create([
             'name'                => $request->name,
             'slug'                => str_replace(' ', '-', $request->name),
             'price'               => $request->price,
             'short_description'   => $request->short_description,
             'long_description'    => $request->long_description,
-            'image'               => $request->image,
+            'image'               => $unique_image_name,
         ]);
 
         if ($product == true) {
@@ -56,6 +63,34 @@ class APIProductController extends Controller
         } else {
             $status = false;
             $msg    = 'Product did not added !';
+        }
+
+        $api_data = [
+            'status' => $status,
+            'msg'    => $msg,
+        ];
+
+        return response()->json($api_data, 200);
+    }
+
+    /**
+     * Delete product
+     */
+    public function deleteProduct($id)
+    {
+        $data = Product::find($id);
+        $data->delete();
+
+        if ($data == true) {
+            if (file_exists('uploads/products/' . $data->image) && !empty($data->image)) {
+                unlink('uploads/products/' . $data->image);
+            }
+
+            $status = true;
+            $msg    = 'Product deleted successfully ):';
+        } else {
+            $status = false;
+            $msg    = 'Product did not deleted !';
         }
 
         $api_data = [
