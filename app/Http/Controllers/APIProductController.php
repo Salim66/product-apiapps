@@ -102,11 +102,35 @@ class APIProductController extends Controller
     }
 
     /**
-     * Single product show
+     * Single product show by product id
      */
     public function singleProduct($id)
     {
         $data = Product::find($id);
+
+        if ($data == null || $data == "") {
+            $status = false;
+            $msg    = 'Not found any product !';
+        } else {
+            $status = true;
+            $msg    = 'Get product data successfully ):';
+        }
+
+        $api_data = [
+            'status' => $status,
+            'msg'    => $msg,
+            'data'   => $data
+        ];
+
+        return response()->json($api_data, 200);
+    }
+
+    /**
+     * Single product show by product slug
+     */
+    public function singleSlugProduct($slug)
+    {
+        $data = Product::where('slug', $slug)->first();
 
         if ($data == null || $data == "") {
             $status = false;
@@ -171,5 +195,23 @@ class APIProductController extends Controller
         ];
 
         return response()->json($api_data, 200);
+    }
+
+    /**
+     * Search Product
+     */
+    public function searchProduct(Request $request)
+    {
+        $search = $request->search;
+
+        if ($search != NULL && $search != "") {
+            $all_data = Product::where('name', 'LIKE', '%' . $search . '%')->get();
+
+            $api_data = [
+                'all_data' => $all_data
+            ];
+
+            return ;
+        }
     }
 }
