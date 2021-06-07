@@ -100,4 +100,28 @@ class APIProductController extends Controller
 
         return response()->json($api_data, 200);
     }
+
+    /**
+     * Single product show
+     */
+    public function singleProduct($id)
+    {
+        $data = Product::find($id);
+
+        if ($data == null || $data == "") {
+            $status = false;
+            $msg    = 'Not found any product !';
+        } else {
+            $status = true;
+            $msg    = 'Get product data successfully ):';
+        }
+
+        $api_data = [
+            'status' => $status,
+            'msg'    => $msg,
+            'data'   => $data
+        ];
+
+        return response()->json($api_data, 200);
+    }
 }
