@@ -40,5 +40,29 @@ class APIProductController extends Controller
             'name'  => 'required',
             'price' => 'required',
         ]);
+
+        $product = Product::create([
+            'name'                => $request->name,
+            'slug'                => str_replace(' ', '-', $request->name),
+            'price'               => $request->price,
+            'short_description'   => $request->short_description,
+            'long_description'    => $request->long_description,
+            'image'               => $request->image,
+        ]);
+
+        if ($product == true) {
+            $status = true;
+            $msg    = 'Product added successfully ):';
+        } else {
+            $status = false;
+            $msg    = 'Product did not added !';
+        }
+
+        $api_data = [
+            'status' => $status,
+            'msg'    => $msg,
+        ];
+
+        return response()->json($api_data, 200);
     }
 }
