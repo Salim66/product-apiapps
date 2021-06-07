@@ -124,4 +124,52 @@ class APIProductController extends Controller
 
         return response()->json($api_data, 200);
     }
+
+    /**
+     * Update product
+     */
+    public function updateProduct(Request $request, $id)
+    {
+        // Find product data
+        $data = Product::find($id);
+        // Check whether the product has or not
+        if ($data != NULL) {
+
+            //upload product
+            $unique_image_name = '';
+            if ($request->hasFile('image')) {
+                $image = $request->file('image');
+                $unique_image_name = md5(time() . rand()) . '.' . $image->getClientOriginalExtension();
+                $image->move(public_path('uploads/products/'), $unique_image_name);
+                if (file_exists('uploads/products/' . $data->image) && !empty($data->image)) {
+                    unlink('uploads/products/' . $data->image);
+                }
+            } else {
+                $unique_image_name = $data->image;
+            }
+
+            $data->name              = $request->name;
+            $data->slug              = str_replace(' ', '-', $request->name);
+            $data->price             = $request->price;
+            $data->short_description = $request->short_description;
+            $data->long_description  = $request->long_description;
+            $data->image             = $unique_image_name;
+            $data->update();
+        }
+
+        if ($data == null || $data == "") {
+            $status = false;
+            $msg    = 'Not found any product !';
+        } else {
+            $status = true;
+            $msg    = 'Product updated successfully ):';
+        }
+
+        $api_data = [
+            'status' => $status,
+            'msg'    => $msg,
+        ];
+
+        return response()->json($api_data, 200);
+    }
 }

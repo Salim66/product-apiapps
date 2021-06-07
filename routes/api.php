@@ -26,4 +26,5 @@ Route::prefix('products')->group(function () {
     Route::post('/add', [APIProductController::class, 'addProduct']);
     Route::post('/delete/{id}', [APIProductController::class, 'deleteProduct']);
     Route::get('/single/{id}', [APIProductController::class, 'singleProduct']);
+    Route::post('/edit/{id}', [APIProductController::class, 'updateProduct']);
 });
