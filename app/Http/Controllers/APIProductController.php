@@ -204,14 +204,15 @@ class APIProductController extends Controller
     {
         $search = $request->search;
 
-        if ($search != NULL && $search != "") {
-            $all_data = Product::where('name', 'LIKE', '%' . $search . '%')->get();
+        // if ($search != NULL && $search != "") {
 
-            $api_data = [
-                'all_data' => $all_data
-            ];
+        // }
+        $all_data = Product::Where('name', 'LIKE', '%' . $search . '%')->get();
 
-            return ;
-        }
+        $api_data = [
+            'status' => true,
+            'all_data' => $all_data
+        ];
+        return response()->json($api_data, 200);
     }
 }
