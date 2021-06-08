@@ -202,14 +202,10 @@ class APIProductController extends Controller
     /**
      * Search Product
      */
-    public function searchProduct(Request $request)
+    public function searchProduct($search)
     {
-        $search = $request->search;
 
-        // if ($search != NULL && $search != "") {
-
-        // }
-        $all_data = Product::Where('name', 'LIKE', '%' . $search . '%')->get();
+        $all_data = Product::Where('slug', 'LIKE', '%' . $search . '%')->get();
 
         $api_data = [
             'status' => true,

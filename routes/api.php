@@ -40,5 +40,5 @@ Route::prefix('products')->group(function () {
     Route::get('/single-slug/{slug}', [APIProductController::class, 'singleSlugProduct']);
     Route::get('/category-wise-search/{id}', [APIProductController::class, 'cateogryWiseProductSearch']);
     Route::post('/edit/{id}', [APIProductController::class, 'updateProduct']);
-    Route::get('/search', [APIProductController::class, 'searchProduct']);
+    Route::get('/search/{search}', [APIProductController::class, 'searchProduct']);
 });
