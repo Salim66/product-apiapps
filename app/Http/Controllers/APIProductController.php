@@ -49,6 +49,7 @@ class APIProductController extends Controller
         }
 
         $product = Product::create([
+            'category_id'         => $request->category_id,
             'name'                => $request->name,
             'slug'                => str_replace(' ', '-', $request->name),
             'price'               => $request->price,
@@ -172,6 +173,7 @@ class APIProductController extends Controller
                 $unique_image_name = $data->image;
             }
 
+            $data->category_id       = $request->category_id;
             $data->name              = $request->name;
             $data->slug              = str_replace(' ', '-', $request->name);
             $data->price             = $request->price;
@@ -208,6 +210,21 @@ class APIProductController extends Controller
 
         // }
         $all_data = Product::Where('name', 'LIKE', '%' . $search . '%')->get();
+
+        $api_data = [
+            'status' => true,
+            'all_data' => $all_data
+        ];
+        return response()->json($api_data, 200);
+    }
+
+    /**
+     * Search cateogry wise Product
+     */
+    public function cateogryWiseProductSearch($id)
+    {
+
+        $all_data = Product::Where('category_id', $id)->get();
 
         $api_data = [
             'status' => true,
